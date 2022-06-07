@@ -6,17 +6,17 @@
       </div>
       <!--登录表单区-->
       <el-form
-        class="login_input"
-        :model="LoginForm"
-        :rules="loginFormRules"
         ref="loginFormRef"
+        class="login_input"
+        :model="loginForm"
+        :rules="loginFormRules"
       >
         <el-form-item prop="username">
           <el-input
             type="text"
             prefix-icon="el-icon-user-solid"
             placeholder="账号"
-            v-model="LoginForm.username"
+            v-model="loginForm.username"
           ></el-input>
         </el-form-item>
         <el-form-item prop="password">
@@ -24,7 +24,7 @@
             type="password"
             prefix-icon="iconfont icon-3702mima"
             placeholder="密码"
-            v-model="LoginForm.password"
+            v-model="loginForm.password"
           ></el-input>
         </el-form-item>
         <el-form-item class="btns">
@@ -41,39 +41,39 @@ export default {
   data() {
     return {
       // 登录表单的数据绑定对象
-      LoginForm: {
+      loginForm: {
         username: 'admin',
         password: '123456'
       },
       loginFormRules: {
         username: [
-          { require: true, message: '请输入登录账户名', trigger: true },
-          { min: 3, max: 6, message: '长度为3-6的账户名', trigger: true }
+          { required: true, message: '请输入登录账户名', trigger: 'blur' },
+          { min: 3, max: 6, message: '长度为3-6的账户名', trigger: 'blur' }
         ],
         password: [
-          { require: true, message: '请输入密码', trigger: true },
-          { min: 6, max: 8, message: '密码长度为6-8个字符', trigger: true }
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 8, message: '密码长度为6-8个字符', trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
-    // 点击重置登陆表单
+    // 点击重置按钮，重置登录表单
     resetLoginForm() {
+      console.log(this)
       this.$refs.loginFormRef.resetFields()
     },
-    // 登录预校验
     login() {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return
         const { data: res } = await this.$http.post('login', this.loginForm)
-        if (res.meta.status !== 200) return this.$message.error('登录失败')
-        this.$message.success('登陆成功')
-        // 1.将登陆成功之后的token，保存到客户端sessionStorage中
-        // 1.1 项目中除了登陆之外的其他API接口只有登陆后才能访问
-        // 1.2 token只应在当前网站打开期间生效，所以将token保存在sessionStorage中
+        if (res.meta.status !== 200) return this.$message.error('登录失败！')
+        this.$message.success('登录成功')
+        // 1. 将登录成功之后的 token，保存到客户端的 sessionStorage 中
+        //   1.1 项目中出了登录之外的其他API接口，必须在登录之后才能访问
+        //   1.2 token 只应在当前网站打开期间生效，所以将 token 保存在 sessionStorage 中
         window.sessionStorage.setItem('token', res.data.token)
-        // 2.通过编程式导航跳转到后台主页，路由地址是/home
+        // 2. 通过编程式导航跳转到后台主页，路由地址是 /home
         this.$router.push('/home')
       })
     }
@@ -83,7 +83,7 @@ export default {
 
 <style lang="less" scoped>
 .login_container {
-  background-color: rgb(16, 90, 65);
+  background-color: #A0B9CD;
   height: 100%;
 }
 .login_box {
