@@ -81,6 +81,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+img {
+
+}
 .home-Container {
   height: 100%;
 }
